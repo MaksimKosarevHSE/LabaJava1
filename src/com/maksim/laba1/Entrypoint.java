@@ -140,11 +140,11 @@ public class Entrypoint {
                     switch (action) {
                         case 1:
                             msg = "Ваша история пополнения:";
-                            predicate = el -> el.getStatus() == TransactionStatus.SUCCESS && el instanceof Deposit;
+                            predicate = el -> el instanceof Deposit;
                             break;
                         case 2:
                             msg = "Ваша история снятия:";
-                            predicate = el -> el.getStatus() == TransactionStatus.SUCCESS && el instanceof Withdraw;
+                            predicate = el -> el instanceof Withdraw;
                             break;
                         case 3:
                             System.out.println("Введите диапазон суммы двумя числами (например 200 350)");
