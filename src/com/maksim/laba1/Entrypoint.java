@@ -84,8 +84,12 @@ public class Entrypoint {
                             currency = Currency.values()[inp1];
                             System.out.println(StaticMessages.addAccount2);
                             String accName = sc.nextLine();
-                            bank.createAccount(currentUser.getId(), currency, accName);
-                            printSuccess("Счёт успешно создан!");
+                            try {
+                                bank.createAccount(currentUser.getId(), currency, accName);
+                                printSuccess("Счёт успешно создан!");
+                            } catch(IllegalArgumentException ex){
+                                printError(ex.getMessage());
+                            }
                         } else {
                             printError("Введен некорректный номер валюты");
                         }
@@ -206,7 +210,24 @@ public class Entrypoint {
                         System.out.println(msg);
                         var result = bank.getUserTransactions(currentUser.getId(), predicate);
                         for (var el : result) {
-                            System.out.println(el);
+                            if (el instanceof Deposit dep){
+                                System.out.println("Операция внесения {" +
+                                        "имя счёта=" + bank.getAccountName(dep.getAccountId())+
+                                        ", сумма внесения=" + dep.getAmount() +
+                                        ", детали=" + dep.getDescription() +
+                                        ", статус=" + dep.getStatus() +
+                                        ", время выполнения=" + dep.getExecutionTime() +
+                                        '}');
+                            } else if (el instanceof Withdraw wit){
+                                System.out.println("Операция снятия {" +
+                                        "имя счёта=" + bank.getAccountName(wit.getAccountId()) +
+                                        ", сумма снятия=" + wit.getAmount() +
+                                        ", детали=" + wit.getDescription() +
+                                        ", статус=" + wit.getStatus() +
+                                        ", время выполнения=" + wit.getExecutionTime() +
+                                        '}');
+                            }
+
                         }
                         if (result.isEmpty()) System.out.println("Пусто");
                     }

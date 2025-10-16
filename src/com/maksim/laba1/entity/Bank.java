@@ -38,6 +38,8 @@ public class Bank implements Serializable {
     }
 
     public Account createAccount(Integer userId, Currency currency, String name) {
+        if (accounts.values().stream().anyMatch(el -> el.getName().equals(name) && el.getOwnerId() == userId)) throw new IllegalArgumentException("Счёт с таким именем уже существует");
+        if (name.isBlank()) throw new IllegalArgumentException("Введите название счёта");
         Account account = new Account(Instant.now(), userId, currency, name);
         account.setId(idSequences.incrementAccountId());
         accounts.put(account.getId(), account);
@@ -133,4 +135,7 @@ public class Bank implements Serializable {
         this.name = name;
     }
 
+    public String getAccountName(Integer accountId) {
+        return accounts.get(accountId).getName();
+    }
 }
