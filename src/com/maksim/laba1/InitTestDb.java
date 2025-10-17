@@ -10,10 +10,6 @@ import java.io.*;
 
 public class InitTestDb {
     public static void main(String[] args) throws IOException {
-        //Инициализация "БД" и пример работы приложения без интерфейса
-
-
-
 //        IdSequences idSequences = new IdSequences();
 //        Bank bank = new Bank("Java");
 //        bank.idSequences = idSequences;

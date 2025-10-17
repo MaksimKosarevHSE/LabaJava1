@@ -18,6 +18,12 @@ import java.util.function.Predicate;
 
 public class Entrypoint {
     public static final String DATABASE_FILE = "database.bin";
+    private static final Integer MAIN_MENU_ZERO = 0;
+    private static final Integer MAIN_MENU_FIRST = 1;
+    private static final Integer MAIN_MENU_SECOND = 2;
+    private static final Integer MAIN_MENU_THIRD = 3;
+    private static final Integer MAIN_MENU_FOURTH = 4;
+    private static final Integer MAIN_MENU_100 = 100;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -42,7 +48,7 @@ public class Entrypoint {
             // Т.к. пользователь часто вводит числа, то решил глобальным try отлавливать некорректный ввод чисел
             try {
                 action = Integer.parseInt(sc.nextLine());
-                if (menuId == 0) { //для гостей
+                if (menuId == MAIN_MENU_ZERO) { //для гостей
                     if (action == 2) {
                         System.out.println("Введите имя:");
                         String firstName = sc.nextLine();
@@ -72,7 +78,7 @@ public class Entrypoint {
                     } else if (action == 3) {
                         return;
                     }
-                } else if (menuId == 1) {
+                } else if (menuId == MAIN_MENU_FIRST) {
                     if (action == 4) {
                         currentUser = null;
                         menuId = 0;
@@ -87,7 +93,7 @@ public class Entrypoint {
                             try {
                                 bank.createAccount(currentUser.getId(), currency, accName);
                                 printSuccess("Счёт успешно создан!");
-                            } catch(IllegalArgumentException ex){
+                            } catch (IllegalArgumentException ex) {
                                 printError(ex.getMessage());
                             }
                         } else {
@@ -98,14 +104,14 @@ public class Entrypoint {
                     } else if (action == 3) {
                         menuId = 100;
                     }
-                } else if (menuId == 3) {
+                } else if (menuId == MAIN_MENU_THIRD) {
                     if (action == currentUser.getAccountsId().size() + 1) {
                         menuId = 1;
                     } else if (1 <= action && action <= currentUser.getAccountsId().size()) {
                         currentAccount = bank.getUserAccounts(currentUser.getId()).get(action - 1);
                         menuId = 4;
                     }
-                } else if (menuId == 4) {
+                } else if (menuId == MAIN_MENU_FOURTH) {
                     if (action == 4) {
                         menuId = 3;
                     } else if (action == 1) {
@@ -133,7 +139,7 @@ public class Entrypoint {
                         }
                         // вносим деньги
                     }
-                } else if (menuId == 100) {
+                } else if (menuId == MAIN_MENU_100) {
                     String msg = null;
                     Predicate<Transaction> predicate = null;
                     boolean isThereIOException = false;
@@ -210,15 +216,15 @@ public class Entrypoint {
                         System.out.println(msg);
                         var result = bank.getUserTransactions(currentUser.getId(), predicate);
                         for (var el : result) {
-                            if (el instanceof Deposit dep){
+                            if (el instanceof Deposit dep) {
                                 System.out.println("Операция внесения {" +
-                                        "имя счёта=" + bank.getAccountName(dep.getAccountId())+
+                                        "имя счёта=" + bank.getAccountName(dep.getAccountId()) +
                                         ", сумма внесения=" + dep.getAmount() +
                                         ", детали=" + dep.getDescription() +
                                         ", статус=" + dep.getStatus() +
                                         ", время выполнения=" + dep.getExecutionTime() +
                                         '}');
-                            } else if (el instanceof Withdraw wit){
+                            } else if (el instanceof Withdraw wit) {
                                 System.out.println("Операция снятия {" +
                                         "имя счёта=" + bank.getAccountName(wit.getAccountId()) +
                                         ", сумма снятия=" + wit.getAmount() +
